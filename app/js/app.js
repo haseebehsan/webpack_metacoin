@@ -11,7 +11,9 @@ require("file-loader?name=../index.html!../index.html");
 // Supports Mist, and other wallets that provide 'web3'.
 if (typeof web3 !== 'undefined') {
     // Use the Mist/wallet/Metamask provider.
-    window.web3 = new Web3(web3.currentProvider);
+
+    //window.web3 = new Web3(web3.currentProvider);
+    window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545')); 
 } else {
     // Your preferred fallback.
     window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545')); 
@@ -23,26 +25,7 @@ Promise.promisifyAll(web3.version, { suffix: "Promise" });
 const MetaCoin = truffleContract(metaCoinJson);
 MetaCoin.setProvider(web3.currentProvider);
 
-window.addEventListener('load', function() {
-	("#send").click(sendCoin);
-    return web3.eth.getAccountsPromise()
-        .then(accounts => {
-            if (accounts.length == 0) {
-                $("#balance").html("N/A");
-                throw new Error("No account with which to transact");
-            }
-            window.account = accounts[0];
-            // console.log("ACCOUNT:", window.account);
-            return web3.version.getNetworkPromise();
-        })
-        .then(function(network) {
-            return MetaCoin.deployed();
-        })
-        .then(deployed => deployed.getBalance.call(window.account))
-        .then(balance => $("#balance").html(balance.toString(10)))
-        .catch(console.error);
-
-});
+//console.log(web3.currentProvider.toString+" - provider");
 
 
 const sendCoin = function() {
@@ -86,3 +69,27 @@ const sendCoin = function() {
             console.error(e);
         });
 };
+
+
+window.addEventListener('load', function() {
+	$	("#send").click(sendCoin);
+
+    return web3.eth.getAccountsPromise()
+        .then(accounts => {
+            if (accounts.length == 0) {
+                $("#balance").html("N/A");
+                throw new Error("No account with which to transact");
+            }
+            window.account = accounts[0];
+            // console.log("ACCOUNT:", window.account);
+            return web3.version.getNetworkPromise();
+        })
+        .then(function(network) {
+            return MetaCoin.deployed();
+        })
+        .then(deployed => deployed.getBalance.call(window.account))
+        .then(balance => $("#balance").html(balance.toString(10)))
+        .catch(console.error);
+
+});
+

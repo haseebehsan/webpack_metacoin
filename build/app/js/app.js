@@ -15988,7 +15988,9 @@ __webpack_require__(115);
 // Supports Mist, and other wallets that provide 'web3'.
 if (typeof web3 !== 'undefined') {
     // Use the Mist/wallet/Metamask provider.
-    window.web3 = new Web3(web3.currentProvider);
+
+    //window.web3 = new Web3(web3.currentProvider);
+    window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545')); 
 } else {
     // Your preferred fallback.
     window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545')); 
@@ -16000,26 +16002,7 @@ Promise.promisifyAll(web3.version, { suffix: "Promise" });
 const MetaCoin = truffleContract(metaCoinJson);
 MetaCoin.setProvider(web3.currentProvider);
 
-window.addEventListener('load', function() {
-	("#send").click(sendCoin);
-    return web3.eth.getAccountsPromise()
-        .then(accounts => {
-            if (accounts.length == 0) {
-                $("#balance").html("N/A");
-                throw new Error("No account with which to transact");
-            }
-            window.account = accounts[0];
-            // console.log("ACCOUNT:", window.account);
-            return web3.version.getNetworkPromise();
-        })
-        .then(function(network) {
-            return MetaCoin.deployed();
-        })
-        .then(deployed => deployed.getBalance.call(window.account))
-        .then(balance => $("#balance").html(balance.toString(10)))
-        .catch(console.error);
-
-});
+//console.log(web3.currentProvider.toString+" - provider");
 
 
 const sendCoin = function() {
@@ -16063,6 +16046,31 @@ const sendCoin = function() {
             console.error(e);
         });
 };
+
+
+window.addEventListener('load', function() {
+	$	("#send").click(sendCoin);
+
+    return web3.eth.getAccountsPromise()
+        .then(accounts => {
+            if (accounts.length == 0) {
+                $("#balance").html("N/A");
+                throw new Error("No account with which to transact");
+            }
+            window.account = accounts[0];
+            // console.log("ACCOUNT:", window.account);
+            return web3.version.getNetworkPromise();
+        })
+        .then(function(network) {
+            return MetaCoin.deployed();
+        })
+        .then(deployed => deployed.getBalance.call(window.account))
+        .then(balance => $("#balance").html(balance.toString(10)))
+        .catch(console.error);
+
+});
+
+
 
 /***/ }),
 /* 36 */
@@ -41801,7 +41809,7 @@ return jQuery;
 /* 114 */
 /***/ (function(module, exports) {
 
-module.exports = {"contract_name":"MetaCoin","abi":[{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalanceInEth","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"}],"unlinked_binary":"0x6060604052341561000f57600080fd5b5b600160a060020a033216600090815260208190526040902061271090555b5b6102728061003e6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416637bd703e8811461005357806390b98a1114610084578063f8b2cb4f146100ba575b600080fd5b341561005e57600080fd5b610072600160a060020a03600435166100eb565b60405190815260200160405180910390f35b341561008f57600080fd5b6100a6600160a060020a036004351660243561018f565b604051901515815260200160405180910390f35b34156100c557600080fd5b610072600160a060020a0360043516610227565b60405190815260200160405180910390f35b600073__ConvertLib____________________________6396e4ee3d61011084610227565b60026000604051602001526040517c010000000000000000000000000000000000000000000000000000000063ffffffff85160281526004810192909252602482015260440160206040518083038186803b151561016d57600080fd5b6102c65a03f4151561017e57600080fd5b50505060405180519150505b919050565b600160a060020a033316600090815260208190526040812054829010156101b857506000610221565b600160a060020a033381166000818152602081905260408082208054879003905592861680825290839020805486019055917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef9085905190815260200160405180910390a35060015b92915050565b600160a060020a0381166000908152602081905260409020545b9190505600a165627a7a723058200c59f8e886c4138ebac38e58e5eac772953020217dcf4afb33ba7066e3ec8cd20029","networks":{"1504953023514":{"events":{"0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef":{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"}},"links":{"ConvertLib":"0xd9d5d1de049ea0995d35b7851775c16e528e295d"},"address":"0x60d3352500e4383d3edd7ca12defbb6c4632bf73","updated_at":1505124508915}},"schema_version":"0.0.5","updated_at":1505124508915}
+module.exports = {"contract_name":"MetaCoin","abi":[{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalanceInEth","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"amount","type":"uint256"}],"name":"sendCoin","outputs":[{"name":"sufficient","type":"bool"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"inputs":[],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"}],"unlinked_binary":"0x6060604052341561000f57600080fd5b5b600160a060020a033216600090815260208190526040902061271090555b5b6102728061003e6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416637bd703e8811461005357806390b98a1114610084578063f8b2cb4f146100ba575b600080fd5b341561005e57600080fd5b610072600160a060020a03600435166100eb565b60405190815260200160405180910390f35b341561008f57600080fd5b6100a6600160a060020a036004351660243561018f565b604051901515815260200160405180910390f35b34156100c557600080fd5b610072600160a060020a0360043516610227565b60405190815260200160405180910390f35b600073__ConvertLib____________________________6396e4ee3d61011084610227565b60026000604051602001526040517c010000000000000000000000000000000000000000000000000000000063ffffffff85160281526004810192909252602482015260440160206040518083038186803b151561016d57600080fd5b6102c65a03f4151561017e57600080fd5b50505060405180519150505b919050565b600160a060020a033316600090815260208190526040812054829010156101b857506000610221565b600160a060020a033381166000818152602081905260408082208054879003905592861680825290839020805486019055917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef9085905190815260200160405180910390a35060015b92915050565b600160a060020a0381166000908152602081905260409020545b9190505600a165627a7a723058200c59f8e886c4138ebac38e58e5eac772953020217dcf4afb33ba7066e3ec8cd20029","networks":{"1505125213972":{"events":{"0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef":{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"}},"links":{"ConvertLib":"0xe35e58e74158778388a410549b1632f5b5177436"},"address":"0x5d1fe87f316ff0e68103d4e6980f0f76a1a034f5","updated_at":1505211032519}},"schema_version":"0.0.5","updated_at":1505211032519}
 
 /***/ }),
 /* 115 */
